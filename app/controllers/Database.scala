@@ -13,6 +13,7 @@ import scala.concurrent.Future
 
 import model.User
 import model.User._
+import play.api.libs.iteratee.Iteratee
 
 object Database extends Controller with MongoController {
   def users: JSONCollection = db.collection[JSONCollection]("users")
@@ -32,7 +33,6 @@ object Database extends Controller with MongoController {
 
   }
 
-
   def findUsers = Action.async {
     val cursor: Cursor[User] = users.find(Json.obj("login" -> Json.obj("$regex" -> ".*"))).cursor[User]
 
@@ -43,28 +43,5 @@ object Database extends Controller with MongoController {
     futurePersonsJsonArray map { users =>  Ok(users(0)) }
   }
 
-  /*
-  def findUser = Action.async(parse.json) { request =>
-    import model.User
-    import model.User._
 
-    val json = request.body
-
-    val user = adminReads.reads(json)
-
-    user.fold(
-      invalid = {errors => },
-      valid = { u =>  }
-    )
-
-    Logger info s"got $user"
-
-    val future = users.find(user).one[User]
-
-    future map {
-     _ map { user => Ok("okay") } getOrElse { BadRequest(s"Not found $user in DB") }
-    }
-
-  }
-    */
 }
