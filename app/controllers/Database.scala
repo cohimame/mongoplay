@@ -44,4 +44,13 @@ object Database extends Controller with MongoController {
   }
 
 
+
+  /*
+  def findJson = Action.async(parse.json) { request =>
+    val query: JsValue = request.body
+    val cursor = users.find(query).cursor[JsValue]
+
+    val futureUsers = cursor.collect[List]()
+  }
+    */
 }
