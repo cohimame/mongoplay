@@ -13,7 +13,7 @@ import scala.concurrent.Future
 
 import model.User
 import model.User._
-import play.api.libs.iteratee.Iteratee
+import model.reactive.{Letter, LetterBox}
 
 object Database extends Controller with MongoController {
   def users: JSONCollection = db.collection[JSONCollection]("users")
@@ -44,13 +44,17 @@ object Database extends Controller with MongoController {
   }
 
 
+  def putLetter = Action.async {
+    val result = LetterBox.put(Letter("dat letter"))
 
-  /*
-  def findJson = Action.async(parse.json) { request =>
-    val query: JsValue = request.body
-    val cursor = users.find(query).cursor[JsValue]
-
-    val futureUsers = cursor.collect[List]()
+    result map { lastErr => Ok(s"success with $lastErr")}
   }
-    */
+
+  def findLetter = Action.async {
+    val result = LetterBox.find(".*")
+
+    result map { _.mkString } map { Ok(_) }
+  }
+
+
 }

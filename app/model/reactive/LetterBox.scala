@@ -28,7 +28,7 @@ object LetterBox {
 
   def put(letter: Letter): Future[LastError] = letterColl.insert(letter)
 
-  def find(query: String) = {
+  def find(query: String): Future[List[Letter]] = {
     val jsonQuery = Json.obj("$regex" -> query)
     letterColl.find(jsonQuery).cursor[Letter].collect[List]()
   }
